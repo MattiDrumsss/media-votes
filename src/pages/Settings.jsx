@@ -4,12 +4,12 @@ import { useStore } from '../store.jsx';
 
 export default function Settings({ ask }) {
   const st = useStore();
-  const { subjects, grades, addSubject, renameSubject, deleteSubject, importData } = st;
+  const { subjects, grades, addSubject, renameSubject, deleteSubject, importData, session, signOut } = st;
   const [name, setName] = useState(''); const [err, setErr] = useState('');
   const [edit, setEdit] = useState(null); const [en, setEn] = useState(''); const [eerr, setEerr] = useState('');
   const [msg, setMsg] = useState(''); const file = useRef();
-  const add = (e) => { e.preventDefault(); const r = addSubject(name); setErr(r || ''); if (!r) setName(''); };
-  const rename = (id) => { const r = renameSubject(id, en); setEerr(r || ''); if (!r) setEdit(null); };
+  const add = async (e) => { e.preventDefault(); const r = await addSubject(name); setErr(r || ''); if (!r) setName(''); };
+  const rename = async (id) => { const r = await renameSubject(id, en); setEerr(r || ''); if (!r) setEdit(null); };
   const del = (s) => { const n = grades.filter((g) => g.subjectId === s.id).length; ask({ title: 'Elimina materia', text: n ? `La materia "${s.name}" contiene ${n} ${n === 1 ? 'voto' : 'voti'}: eliminandola verranno eliminati anche i voti associati.` : `Eliminare la materia "${s.name}"?`, onOk: () => deleteSubject(s.id) }); };
   const exp = () => {
     const a = document.createElement('a');
@@ -21,7 +21,7 @@ export default function Settings({ ask }) {
     const r = new FileReader();
     r.onload = () => {
       let obj; try { obj = JSON.parse(r.result); } catch { return setMsg('File non valido.'); }
-      ask({ title: 'Importa backup', ok: 'Importa', text: 'I dati attuali verranno sostituiti con quelli del backup. Continuare?', onOk: () => setMsg(importData(obj) || 'Backup importato.') });
+      ask({ title: 'Importa backup', ok: 'Importa', text: 'I dati attuali verranno sostituiti con quelli del backup. Continuare?', onOk: async () => setMsg((await importData(obj)) || 'Backup importato.') });
     };
     r.readAsText(f);
   };
@@ -41,6 +41,10 @@ export default function Settings({ ask }) {
             ))}
           </div>
           {eerr && <p className="err">{eerr}</p>}
+        </div>
+        <div className="card"><h3>Account</h3>
+          <p className="muted">Collegato come <b>{session?.user?.email}</b></p>
+          <div className="row"><button className="btn ghost" onClick={signOut}>Esci</button></div>
         </div>
         <div className="card"><h3>Backup dei dati</h3>
           <p className="muted">Scarica un file JSON con materie e voti, oppure ripristinalo su un altro dispositivo.</p>

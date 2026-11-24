@@ -12,12 +12,13 @@ export default function GradeForm({ grade, subjectId, onClose }) {
   });
   const [err, setErr] = useState('');
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     const v = parseFloat(f.value.replace(',', '.'));
     if (!(v >= 1 && v <= 10)) return setErr('Il voto deve essere compreso tra 1 e 10.');
     if (!f.subjectId) return setErr('Crea prima una materia in Impostazioni.');
-    saveGrade({ ...(grade || {}), value: Math.round(v * 100) / 100, subjectId: f.subjectId, date: f.date || today(), type: f.type, note: f.note.trim() });
+    const r = await saveGrade({ ...(grade || {}), value: Math.round(v * 100) / 100, subjectId: f.subjectId, date: f.date || today(), type: f.type, note: f.note.trim() });
+    if (r) return setErr(r);
     onClose();
   };
   return (
