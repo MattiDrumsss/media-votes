@@ -6,7 +6,8 @@ const Ctx = createContext();
 export const useStore = () => useContext(Ctx);
 const mapG = (g) => ({ id: g.id, subjectId: g.subject_id, value: Number(g.value), date: g.date, type: g.type, note: g.note || '' });
 const DEFAULTS = ['Italiano', 'Matematica', 'Inglese', 'Storia'];
-const FAIL = 'Salvataggio non riuscito. Controlla la connessione e riprova.';
+const FAIL = 'Operazione non riuscita';
+const fail = (e) => FAIL + ': ' + (e?.message || 'errore sconosciuto');
 
 export function StoreProvider({ children }) {
   const [session, setSession] = useState(undefined);
@@ -28,7 +29,7 @@ export function StoreProvider({ children }) {
     (async () => {
       const [s, g] = await Promise.all([supabase.from('subjects').select('id,name').order('created_at'), supabase.from('grades').select('*')]);
       if (off) return;
-      if (s.error || g.error) { setError('Impossibile caricare i dati. Controlla la connessione.'); setLoading(false); return; }
+      if (s.error || g.error) { setError('Impossibile caricare i dati: ' + (s.error || g.error).message); setLoading(false); return; }
       let subs = s.data; const flag = 'mv-seeded:' + uid;
       if (!subs.length && !g.data.length && !localStorage.getItem(flag)) {
         const r = await supabase.from('subjects').insert(DEFAULTS.map((name) => ({ name }))).select('id,name');
@@ -55,31 +56,31 @@ export function StoreProvider({ children }) {
     async addSubject(name) {
       const e = check(name); if (e) return e;
       const r = await supabase.from('subjects').insert({ name: name.trim() }).select('id,name').single();
-      if (r.error) return FAIL;
+      if (r.error) return fail(r.error);
       setSubjects((s) => [...s, r.data]);
     },
     async renameSubject(id, name) {
       const e = check(name, id); if (e) return e;
       const r = await supabase.from('subjects').update({ name: name.trim() }).eq('id', id);
-      if (r.error) return FAIL;
+      if (r.error) return fail(r.error);
       setSubjects((s) => s.map((x) => (x.id === id ? { ...x, name: name.trim() } : x)));
     },
     async deleteSubject(id) {
       const r = await supabase.from('subjects').delete().eq('id', id);
-      if (r.error) return setError(FAIL);
+      if (r.error) return setError(fail(r.error));
       setSubjects((s) => s.filter((x) => x.id !== id)); setGrades((g) => g.filter((x) => x.subjectId !== id));
     },
     async saveGrade(g) {
       const row = { subject_id: g.subjectId, value: g.value, date: g.date, type: g.type, note: g.note };
       const q = supabase.from('grades');
       const r = g.id ? await q.update(row).eq('id', g.id).select().single() : await q.insert(row).select().single();
-      if (r.error) return FAIL;
+      if (r.error) return fail(r.error);
       const n = mapG(r.data);
       setGrades((a) => (g.id ? a.map((x) => (x.id === n.id ? n : x)) : [...a, n]));
     },
     async deleteGrade(id) {
       const r = await supabase.from('grades').delete().eq('id', id);
-      if (r.error) return setError(FAIL);
+      if (r.error) return setError(fail(r.error));
       setGrades((a) => a.filter((x) => x.id !== id));
     },
     async importData(obj) {
