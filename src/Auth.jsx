@@ -4,10 +4,11 @@ import { useStore } from './store.jsx';
 const tr = (m = '') => {
   if (/invalid login/i.test(m)) return 'Email o password non corretti.';
   if (/already registered/i.test(m)) return 'Esiste già un account con questa email.';
+  if (/api key|apikey|jwt|failed to fetch|network/i.test(m)) return 'Impossibile contattare il database. Controlla URL e chiave su Vercel. (' + m + ')';
   if (/password/i.test(m)) return 'La password deve avere almeno 6 caratteri.';
-  if (/valid email|invalid/i.test(m)) return 'Inserisci un indirizzo email valido.';
-  if (/rate|too many/i.test(m)) return 'Troppi tentativi. Riprova tra qualche minuto.';
-  return 'Operazione non riuscita. Riprova.';
+  if (/email/i.test(m) && /invalid|valid/i.test(m)) return 'Supabase rifiuta questa email. (' + m + ')';
+  if (/rate|too many|seconds/i.test(m)) return 'Troppi tentativi. Riprova tra qualche minuto. (' + m + ')';
+  return 'Operazione non riuscita: ' + m;
 };
 
 export default function Auth() {
