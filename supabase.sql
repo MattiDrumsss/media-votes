@@ -27,3 +27,8 @@ create policy "subjects own" on public.subjects for all to authenticated
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 create policy "grades own" on public.grades for all to authenticated
   using (user_id = auth.uid()) with check (user_id = auth.uid());
+
+-- Permessi per gli utenti che hanno fatto l'accesso (necessari sui progetti Supabase piu' recenti)
+grant usage on schema public to authenticated;
+grant select, insert, update, delete on public.subjects to authenticated;
+grant select, insert, update, delete on public.grades to authenticated;

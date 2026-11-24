@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { ArrowLeft, MoreVertical, Pencil, Trash2, Plus } from 'lucide-react';
 import { useStore } from '../store.jsx';
-import { avg, fmt, tone, toneLabel, fdate, byDate } from '../utils';
+import { avg, fmt, tone, toneLabel, fdate, byDate, trendOf } from '../utils';
+import { PeriodBar, TrendIcon, CountUp } from '../ui.jsx';
+import { SubjIcon } from '../icons.jsx';
 import { Trend, gradeSeries } from '../charts.jsx';
 
 export default function SubjectDetail({ id, go, openAdd, openEdit, ask }) {
@@ -15,11 +17,12 @@ export default function SubjectDetail({ id, go, openAdd, openEdit, ask }) {
   return (
     <div onClick={() => setMenu(null)}>
       <header className="top">
-        <div className="row"><button className="icon-btn" onClick={() => go('subjects')} aria-label="Indietro"><ArrowLeft size={20} /></button><h1>{s.name}</h1></div>
+        <div className="row"><button className="icon-btn" onClick={() => go('subjects')} aria-label="Indietro"><ArrowLeft size={20} /></button><SubjIcon s={s} size={22} /><h1>{s.name}</h1></div>
         <button className="btn" onClick={() => openAdd(id)}><Plus size={18} />AGGIUNGI VOTO</button>
       </header>
+      <PeriodBar />
       <section className="stats four">
-        <div className={`card hero ${tone(a)}`}><span className="label">Media</span><b className="big">{fmt(a)}</b><span className="pill">{toneLabel[tone(a)]}</span></div>
+        <div className={`card hero ${tone(a)}`}><span className="label">Media</span><b className="big"><CountUp value={a} /></b><div className="row"><span className="pill">{toneLabel[tone(a)]}</span><TrendIcon t={trendOf(gs)} /></div></div>
         <div className="card"><span className="label">Voti</span><b className="mid">{gs.length}</b></div>
         <div className="card"><span className="label">Più alto</span><b className="mid">{gs.length ? fmt(Math.max(...vals)) : '—'}</b></div>
         <div className="card"><span className="label">Più basso</span><b className="mid">{gs.length ? fmt(Math.min(...vals)) : '—'}</b></div>

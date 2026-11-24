@@ -6,3 +6,8 @@ export const today = () => new Date().toLocaleDateString('en-CA');
 export const fdate = (d) => new Date(d + 'T00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
 export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 export const byDate = (a, b) => a.date.localeCompare(b.date);
+export const periodOf = (date, mode) => { const m = +date.slice(5, 7); return mode === 'tri' ? (m >= 9 ? 1 : 2) : (m >= 9 || m === 1 ? 1 : 2); };
+export const PERIODS = { quad: { short: ['1° quadr.', '2° quadr.'], full: ['1° Quadrimestre', '2° Quadrimestre'] }, tri: { short: ['Trimestre', 'Pentamestre'], full: ['Trimestre', 'Pentamestre'] } };
+export const daysUntil = (d) => Math.round((new Date(d + 'T00:00') - new Date(today() + 'T00:00')) / 864e5);
+export const dayLabel = (n) => (n === 0 ? 'Oggi' : n === 1 ? 'Domani' : n === -1 ? 'Ieri' : n > 1 ? `Tra ${n} giorni` : `${-n} giorni fa`);
+export const trendOf = (gs) => { const s = [...gs].sort(byDate); if (s.length < 2) return null; const k = Math.min(3, s.length - 1); const d = avg(s.slice(-k)) - avg(s.slice(0, -k)); return d > 0.25 ? 'up' : d < -0.25 ? 'down' : 'flat'; };

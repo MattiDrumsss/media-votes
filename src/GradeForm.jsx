@@ -3,8 +3,8 @@ import { Modal } from './ui.jsx';
 import { useStore } from './store.jsx';
 import { today } from './utils';
 
-export default function GradeForm({ grade, subjectId, onClose }) {
-  const { subjects, saveGrade } = useStore();
+export default function GradeForm({ grade, subjectId, eventId, onClose }) {
+  const { subjects, saveGrade, deleteEvent } = useStore();
   const [f, setF] = useState({
     value: grade ? String(grade.value).replace('.', ',') : '',
     subjectId: grade?.subjectId || subjectId || subjects[0]?.id || '',
@@ -19,6 +19,7 @@ export default function GradeForm({ grade, subjectId, onClose }) {
     if (!f.subjectId) return setErr('Crea prima una materia in Impostazioni.');
     const r = await saveGrade({ ...(grade || {}), value: Math.round(v * 100) / 100, subjectId: f.subjectId, date: f.date || today(), type: f.type, note: f.note.trim() });
     if (r) return setErr(r);
+    if (eventId) await deleteEvent(eventId);
     onClose();
   };
   return (
