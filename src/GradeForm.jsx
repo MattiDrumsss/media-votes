@@ -25,7 +25,7 @@ export default function GradeForm({ grade, subjectId, eventId, onClose }) {
   return (
     <Modal title={grade ? 'Modifica voto' : 'Aggiungi voto'} onClose={onClose}>
       <form onSubmit={submit} className="form">
-        <label>Voto<input autoFocus inputMode="decimal" placeholder="es. 7,5" value={f.value} onChange={set('value')} /></label>
+        <label>Voto<input inputMode="decimal" placeholder="es. 7,5" value={f.value} onChange={set('value')} /></label>
         <label>Materia<select value={f.subjectId} onChange={set('subjectId')}>{subjects.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
         <div className="two">
           <label>Data<input type="date" value={f.date} onChange={set('date')} /></label>

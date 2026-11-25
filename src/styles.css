@@ -198,3 +198,41 @@ button.hc:hover{transform:scale(1.3)}.hc.out{visibility:hidden}
 .daybadge{padding:6px 14px;border-radius:99px;font-weight:700;background:rgba(128,128,160,.18);animation:pop .4s}
 .daybadge.high{color:var(--ok);background:rgba(52,211,153,.15)}.daybadge.mid{color:var(--mid);background:rgba(251,191,36,.15)}.daybadge.low{color:var(--bad);background:rgba(248,113,113,.15)}
 .val.high{color:var(--ok)}.val.mid{color:var(--mid)}.val.low{color:var(--bad)}
+
+/* ===== v3: niente zoom su telefono, modale ferma, materie e voti ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body.lock{overflow:hidden;overscroll-behavior:none}
+.overlay{height:100vh;height:100dvh;overscroll-behavior:contain;touch-action:none;padding:16px}
+.modal{max-height:calc(100dvh - 32px);touch-action:pan-y;margin:auto}
+@media(max-width:860px){input,select,textarea{font-size:16px}}
+
+.subj{padding:18px;gap:16px;background:radial-gradient(120% 90% at 100% 0%,color-mix(in srgb,var(--c) 18%,transparent),transparent 60%),var(--card)}
+.subj .head{display:flex;align-items:center;gap:12px;min-width:0}
+.subjname{flex:1;min-width:0;text-align:left;font-size:1.05rem;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subj .body{display:flex;align-items:center;gap:16px}
+.subj .meta{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0;text-align:left}
+.ring{position:relative;flex:none;display:grid;place-items:center}
+.ring svg{position:absolute;inset:0}
+.ringfg{transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 6px currentColor)}
+.ringval{position:relative;font-family:'Sora',sans-serif;font-weight:800;font-size:1.05rem}
+.bigring{font-size:1.9rem;letter-spacing:-.03em}
+
+.back{display:inline-flex;align-items:center;gap:8px;color:var(--mu);margin-bottom:14px;padding:6px 0;transition:.2s}.back:hover{color:var(--tx);transform:translateX(-3px)}
+.subhero{padding:22px;margin-bottom:20px;background:radial-gradient(120% 120% at 0% 0%,color-mix(in srgb,var(--c) 32%,transparent),transparent 60%),radial-gradient(100% 100% at 100% 100%,rgba(var(--pr),.2),transparent 60%),var(--card);border-color:color-mix(in srgb,var(--c) 45%,transparent)}
+.subhero-top{display:flex;align-items:center;gap:14px}
+.subhero-top h1{font-size:1.6rem;line-height:1.1;margin-bottom:8px}
+.subhero-top .sico{width:56px;height:56px;border-radius:18px}
+.subhero-body{display:flex;align-items:center;gap:22px;margin-top:22px;flex-wrap:wrap}
+.chips4{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;flex:1;min-width:200px}
+.chips4>div{padding:12px 14px;border-radius:16px;background:rgba(128,128,160,.13);display:flex;flex-direction:column;gap:4px}
+.chips4 span{font-size:.75rem;color:var(--mu)}.chips4 b{font-family:'Sora',sans-serif;font-size:1.25rem;display:flex;align-items:center;gap:6px}
+
+.mgroup{margin:24px 0 10px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);font-weight:600}
+.grade{padding:14px 14px 14px 18px;position:relative;gap:14px}
+.grade::before{content:'';position:absolute;left:0;top:16px;bottom:16px;width:4px;border-radius:0 4px 4px 0;background:var(--gc,var(--p))}
+.grade.high{--gc:var(--ok)}.grade.mid{--gc:var(--mid)}.grade.low{--gc:var(--bad)}
+.gval{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;flex:none;font-family:'Sora',sans-serif;font-weight:800;font-size:1.2rem;color:var(--gc);background:color-mix(in srgb,var(--gc) 16%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gc) 35%,transparent),0 0 20px color-mix(in srgb,var(--gc) 22%,transparent)}
+.gline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.gline b{font-size:.98rem}
+.grade .bar{height:5px;margin-top:8px}
+.grade:hover{transform:translateX(3px);border-color:color-mix(in srgb,var(--gc) 50%,transparent)}.grade{transition:.2s}
+@media(max-width:480px){.subhero{padding:18px}.subhero-top h1{font-size:1.35rem}.gval{width:56px;height:56px;font-size:1.1rem}}

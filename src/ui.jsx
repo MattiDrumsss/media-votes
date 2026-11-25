@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, ChevronRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { useStore } from './store.jsx';
-import { avg, fmt, tone, toneLabel, trendOf, PERIODS } from './utils';
+import { avg, fmt, tone, toneLabel, trendOf, byDate, PERIODS } from './utils';
 import { SubjIcon } from './icons.jsx';
 
 export const Bar = ({ value }) => <div className="bar"><i style={{ width: `${value ? value * 10 : 0}%` }} /></div>;
@@ -28,6 +28,7 @@ export function PeriodBar() {
 export const Splash = ({ hide }) => <div className={`splash ${hide ? 'hide' : ''}`}><img src="/logo.png" className="logo splash-logo" alt="" /><div className="loadbar"><i /></div></div>;
 
 export function Modal({ title, onClose, children }) {
+  useEffect(() => { document.body.classList.add('lock'); return () => document.body.classList.remove('lock'); }, []);
   return (
     <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal card">
@@ -50,6 +51,23 @@ export function Confirm({ c, onClose }) {
   );
 }
 
+export const TC = { high: '#34d399', mid: '#fbbf24', low: '#f87171', none: '#8b86a3' };
+
+export function Ring({ value, t, size = 84, stroke = 8, children }) {
+  const [m, setM] = useState(false);
+  useEffect(() => { const x = setTimeout(() => setM(true), 60); return () => clearTimeout(x); }, []);
+  const r = (size - stroke) / 2, c = 2 * Math.PI * r, off = c * (1 - (value ? value / 10 : 0));
+  return (
+    <div className="ring" style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(128,128,160,.2)" strokeWidth={stroke} />
+        <circle className="ringfg" cx={size / 2} cy={size / 2} r={r} fill="none" stroke="currentColor" style={{ color: TC[t] }} strokeWidth={stroke} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={m ? off : c} transform={`rotate(-90 ${size / 2} ${size / 2})`} />
+      </svg>
+      <span className="ringval">{children}</span>
+    </div>
+  );
+}
+
 export function SubjectGrid({ go }) {
   const { subjects, grades } = useStore();
   if (!subjects.length) return <div className="card empty">Non hai ancora materie. Creale in Impostazioni.</div>;
@@ -57,13 +75,18 @@ export function SubjectGrid({ go }) {
     <div className="grid">
       {subjects.map((s, i) => {
         const gs = grades.filter((g) => g.subjectId === s.id);
-        const a = avg(gs); const t = tone(a);
+        const a = avg(gs); const t = tone(a); const last = [...gs].sort(byDate).pop();
         return (
           <button key={s.id} className={`card subj rise ${t}`} style={{ '--i': i, '--c': s.color }} onClick={() => go('detail', s.id)}>
-            <div className="row between"><div className="row"><SubjIcon s={s} /><b>{s.name}</b></div><ChevronRight size={18} className="muted" /></div>
-            <div className="row between"><div className="avg"><CountUp value={a} /></div><TrendIcon t={trendOf(gs)} /></div>
-            <Bar value={a} />
-            <div className="row between small"><span className="muted">{gs.length} {gs.length === 1 ? 'voto' : 'voti'}</span><span className="pill">{toneLabel[t]}</span></div>
+            <div className="head"><SubjIcon s={s} /><span className="subjname">{s.name}</span><ChevronRight size={18} className="muted" /></div>
+            <div className="body">
+              <Ring value={a} t={t}><CountUp value={a} /></Ring>
+              <div className="meta">
+                <span className="pill">{toneLabel[t]}</span>
+                <span className="muted small">{gs.length} {gs.length === 1 ? 'voto' : 'voti'}{last ? ` – ultimo ${fmt(last.value)}` : ''}</span>
+                <TrendIcon t={trendOf(gs)} />
+              </div>
+            </div>
           </button>
         );
       })}
