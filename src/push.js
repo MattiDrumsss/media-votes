@@ -1,4 +1,4 @@
-import { supabase, supabaseUrl, supabaseKey } from './supabase';
+import { supabase, supabaseUrl } from './supabase';
 const b64 = (s) => { const r = atob((s + '='.repeat((4 - (s.length % 4)) % 4)).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(r, (c) => c.charCodeAt(0)); };
 export const VAPID = (import.meta.env.VAPID_PUBLIC_KEY || import.meta.env.VITE_VAPID_PUBLIC_KEY || '').trim();
 export const pushSupported = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
@@ -15,9 +15,12 @@ export async function disablePush() {
   const sub = await getSub(); if (!sub) return;
   await supabase.from('push_subs').delete().eq('endpoint', sub.endpoint); await sub.unsubscribe();
 }
-export async function sendTest(token) {
-  const r = await fetch(supabaseUrl + '/functions/v1/send-reminders', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token, apikey: supabaseKey }, body: JSON.stringify({ test: true }) });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(j.error || j.message || 'Invio non riuscito (' + r.status + ')');
-  return j.sent ? 'Notifica inviata: arriva tra pochi secondi.' : 'Nessun dispositivo registrato: attiva prima le notifiche.';
+export async function sendTest() {
+  const { data, error } = await supabase.functions.invoke('send-reminders', { body: { test: true } });
+  if (error) {
+    let m = error.message || 'Invio non riuscito';
+    try { const j = await error.context.json(); m = j.error || j.message || m; } catch { /* nessun dettaglio */ }
+    throw new Error(m + ' [' + supabaseUrl + ']');
+  }
+  return data?.sent ? 'Notifica inviata: arriva tra pochi secondi.' : 'Nessun dispositivo registrato: attiva prima le notifiche.';
 }
