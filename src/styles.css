@@ -123,3 +123,15 @@ h1,h2,.big,.mid,.avg,.btn{font-family:'Sora','Inter',system-ui,sans-serif}
  .event{flex-wrap:wrap}
 }
 .card.item{overflow:visible}.card.item::after{display:none}
+
+/* ===== date, orari e menu: aspetto uguale su iPhone, Android e computer ===== */
+input[type='date'],input[type='time'],select{-webkit-appearance:none;appearance:none;display:block;height:48px;min-height:48px;min-width:0;max-width:100%;line-height:1.2;text-align:left;padding-top:0;padding-bottom:0}
+input[type='date']::-webkit-date-and-time-value,input[type='time']::-webkit-date-and-time-value{text-align:left;margin:0;min-height:1.2em}
+input[type='date']::-webkit-calendar-picker-indicator,input[type='time']::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.7;cursor:pointer}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239a95b3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+.two>*,.form>*{min-width:0}
+.prefs{display:flex;flex-direction:column;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.chk{display:flex;align-items:center;gap:12px;font-size:1rem;color:var(--tx)}
+.chk input{width:22px;height:22px;min-height:22px;accent-color:var(--p);flex:none;-webkit-appearance:auto;appearance:auto;padding:0}
+.timef{display:flex;flex-direction:column;gap:6px;font-size:.85rem;color:var(--mu);max-width:220px}
+@media(max-width:480px){.two{grid-template-columns:1fr}.event .btn.sm{width:100%}}
