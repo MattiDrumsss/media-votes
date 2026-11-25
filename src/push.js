@@ -16,7 +16,7 @@ export async function disablePush() {
   await supabase.from('push_subs').delete().eq('endpoint', sub.endpoint); await sub.unsubscribe();
 }
 export async function sendTest() {
-  const { data, error } = await supabase.functions.invoke('send-reminders', { body: { test: true } });
+  const { data, error } = await supabase.functions.invoke('rapid-responder', { body: { test: true } });
   if (error) {
     let m = error.message || 'Invio non riuscito';
     try { const j = await error.context.json(); m = j.error || j.message || m; } catch { /* nessun dettaglio */ }
