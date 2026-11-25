@@ -1,4 +1,4 @@
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from 'recharts';
+import { ResponsiveContainer, ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from 'recharts';
 import { byDate } from './utils';
 import { acc } from './theme';
 
@@ -8,13 +8,16 @@ export const Chart = ({ children }) => <div className="chart"><ResponsiveContain
 
 export function Trend({ data, name }) {
   if (data.length < 2) return <div className="empty">Servono almeno 2 voti per vedere l'andamento.</div>;
+  const c = acc();
   return (
     <Chart>
-      <LineChart data={data} margin={{ left: -20, right: 8, top: 8 }}>
+      <ComposedChart data={data} margin={{ left: -20, right: 8, top: 8 }}>
+        <defs><linearGradient id="trendg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={c} stopOpacity={0.45} /><stop offset="100%" stopColor={c} stopOpacity={0} /></linearGradient></defs>
         <CartesianGrid stroke="#8b86a32e" vertical={false} />
         <XAxis dataKey="d" {...axis} /><YAxis domain={[1, 10]} {...axis} /><Tooltip {...tip} />
-        <Line type="monotone" dataKey="v" name={name} stroke={acc()} strokeWidth={3} dot={{ r: 4, fill: acc() }} activeDot={{ r: 6 }} />
-      </LineChart>
+        <Area type="monotone" dataKey="v" stroke="none" fill="url(#trendg)" tooltipType="none" animationDuration={1800} animationEasing="ease-out" />
+        <Line type="monotone" dataKey="v" name={name} stroke={c} strokeWidth={3.5} className="glow-line" dot={{ r: 4, fill: c, stroke: '#fff', strokeWidth: 1.5 }} activeDot={{ r: 8 }} animationDuration={1600} animationEasing="ease-out" />
+      </ComposedChart>
     </Chart>
   );
 }

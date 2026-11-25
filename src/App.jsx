@@ -9,7 +9,7 @@ import Stats from './pages/Stats.jsx';
 import Settings from './pages/Settings.jsx';
 import GradeForm from './GradeForm.jsx';
 import Auth from './Auth.jsx';
-import { Confirm, Splash } from './ui.jsx';
+import { Confirm, Splash, Confetti } from './ui.jsx';
 import { useStore } from './store.jsx';
 import { configured } from './supabase';
 
@@ -21,6 +21,8 @@ function Shell() {
   const [route, setRoute] = useState({ page: 'dashboard', id: null });
   const [form, setForm] = useState(null);
   const [conf, setConf] = useState(null);
+  const [burst, setBurst] = useState(0);
+  useEffect(() => { const f = () => { setBurst(Date.now()); setTimeout(() => setBurst(0), 2400); }; window.addEventListener('mv-confetti', f); return () => window.removeEventListener('mv-confetti', f); }, []);
   const go = (page, id = null) => { setRoute({ page, id }); window.scrollTo(0, 0); };
   const ui = { go, openAdd: (subjectId, eventId) => setForm({ subjectId, eventId }), openEdit: (grade) => setForm({ grade }), ask: setConf };
   const active = route.page === 'detail' ? 'subjects' : route.page;
@@ -42,6 +44,7 @@ function Shell() {
         {NAV.map(([k, l, I, s]) => <button key={k} className={active === k ? 'on' : ''} onClick={() => go(k)} aria-label={l}><I size={20} /><span>{s}</span></button>)}
       </nav>
       <button className="fab" onClick={() => ui.openAdd()} aria-label="Aggiungi voto"><Plus size={26} /></button>
+      <Confetti burst={burst} />
       {form && <GradeForm {...form} onClose={() => setForm(null)} />}
       {conf && <Confirm c={conf} onClose={() => setConf(null)} />}
     </div>

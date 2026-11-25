@@ -236,3 +236,32 @@ body.lock{overflow:hidden;overscroll-behavior:none}
 .grade .bar{height:5px;margin-top:8px}
 .grade:hover{transform:translateX(3px);border-color:color-mix(in srgb,var(--gc) 50%,transparent)}.grade{transition:.2s}
 @media(max-width:480px){.subhero{padding:18px}.subhero-top h1{font-size:1.35rem}.gval{width:56px;height:56px;font-size:1.1rem}}
+
+/* ===== v4: materie intere, grafici e animazioni ===== */
+.grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.subjname{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+.subj .meta{flex:1}.subj .body{gap:18px}.pill{white-space:nowrap}.lastv{font-family:'Sora',sans-serif}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.grid.ach{grid-template-columns:1fr 1fr}}
+
+.glow-line{filter:drop-shadow(0 0 7px rgba(var(--pr),.85))}
+.chart{animation:chartIn .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes chartIn{from{opacity:0;transform:translateY(16px) scale(.98)}}
+.recharts-active-dot circle{animation:dotPulse 1.2s ease-out infinite}
+@keyframes dotPulse{0%{filter:drop-shadow(0 0 0 rgba(var(--pr),.95))}100%{filter:drop-shadow(0 0 16px rgba(var(--pr),0))}}
+.recharts-bar-rectangle path{transition:filter .2s}.recharts-bar-rectangle:hover path{filter:brightness(1.25) drop-shadow(0 0 8px rgba(255,255,255,.4))}
+
+body::before,body::after{content:'';position:fixed;z-index:0;border-radius:50%;pointer-events:none}
+body::before{width:560px;height:560px;top:-200px;right:-160px;background:radial-gradient(circle,rgba(var(--pr),.3),transparent 65%);animation:drift 20s ease-in-out infinite alternate}
+body::after{width:520px;height:520px;bottom:-220px;left:-160px;background:radial-gradient(circle,rgba(var(--p2r),.28),transparent 65%);animation:drift 26s ease-in-out infinite alternate-reverse}
+@keyframes drift{to{transform:translate(-90px,70px) scale(1.2)}}
+.shell,.authwrap{position:relative;z-index:1}
+
+.btn{position:relative;overflow:hidden}
+.btn::before{content:'';position:absolute;top:0;bottom:0;width:60%;left:-80%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:shine 4.5s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,70%{left:-80%}100%{left:140%}}
+.btn.ghost::before,.btn.danger::before{display:none}
+@media(hover:hover){.card::after{background:radial-gradient(260px circle at var(--mx,30%) var(--my,0%),rgba(255,255,255,.1),transparent 65%)}}
+
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
+.confetti i{position:absolute;left:50%;top:70%;width:9px;height:14px;border-radius:2px;background:var(--c);animation:burst 1.9s cubic-bezier(.15,.7,.3,1) var(--d) both}
+@keyframes burst{0%{transform:translate(-50%,0) rotate(0)}60%{opacity:1}100%{transform:translate(calc(-50% + var(--x)),var(--y)) rotate(var(--r));opacity:0}}

@@ -20,6 +20,7 @@ export default function GradeForm({ grade, subjectId, eventId, onClose }) {
     const r = await saveGrade({ ...(grade || {}), value: Math.round(v * 100) / 100, subjectId: f.subjectId, date: f.date || today(), type: f.type, note: f.note.trim() });
     if (r) return setErr(r);
     if (eventId) await deleteEvent(eventId);
+    if (!grade && v >= 8) window.dispatchEvent(new Event('mv-confetti'));
     onClose();
   };
   return (

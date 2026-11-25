@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { X, ChevronRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { useStore } from './store.jsx';
 import { avg, fmt, tone, toneLabel, trendOf, byDate, PERIODS } from './utils';
@@ -83,7 +83,8 @@ export function SubjectGrid({ go }) {
               <Ring value={a} t={t}><CountUp value={a} /></Ring>
               <div className="meta">
                 <span className="pill">{toneLabel[t]}</span>
-                <span className="muted small">{gs.length} {gs.length === 1 ? 'voto' : 'voti'}{last ? ` – ultimo ${fmt(last.value)}` : ''}</span>
+                <span className="small"><b>{gs.length}</b> <span className="muted">{gs.length === 1 ? 'voto' : 'voti'}</span></span>
+                {last && <span className="small muted">ultimo voto <b className="lastv">{fmt(last.value)}</b></span>}
                 <TrendIcon t={trendOf(gs)} />
               </div>
             </div>
@@ -92,4 +93,11 @@ export function SubjectGrid({ go }) {
       })}
     </div>
   );
+}
+
+export function Confetti({ burst }) {
+  const cols = ['#a855f7', '#34d399', '#fbbf24', '#f87171', '#60a5fa', '#f472b6'];
+  const items = useMemo(() => Array.from({ length: 48 }, (_, i) => ({ '--x': `${(Math.random() * 2 - 1) * 46}vw`, '--y': `${-(25 + Math.random() * 55)}vh`, '--r': `${Math.random() * 900 - 450}deg`, '--d': `${Math.random() * 0.25}s`, '--c': cols[i % cols.length] })), [burst]);
+  if (!burst) return null;
+  return <div className="confetti">{items.map((st, i) => <i key={i} style={st} />)}</div>;
 }

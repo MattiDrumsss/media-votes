@@ -9,3 +9,5 @@ matchMedia('(prefers-color-scheme: light)').addEventListener('change', applyThem
 createRoot(document.getElementById('root')).render(<StoreProvider><App /></StoreProvider>);
 
 if ('serviceWorker' in navigator && import.meta.env.PROD) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+
+if (matchMedia('(hover: hover)').matches) document.addEventListener('pointermove', (e) => { const c = e.target.closest?.('.card'); if (c) { const r = c.getBoundingClientRect(); c.style.setProperty('--mx', `${e.clientX - r.left}px`); c.style.setProperty('--my', `${e.clientY - r.top}px`); } });
