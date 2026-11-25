@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { Rocket, ListChecks, Trophy, Crown, Target, Flame, Zap, TrendingUp, Medal, ShieldCheck, Lock } from 'lucide-react';
 import { useStore } from '../store.jsx';
 import { avg, byDate } from '../utils';
@@ -31,10 +31,10 @@ export default function Stats() {
             <Trend data={gradeSeries(grades.filter((g) => g.subjectId === cur?.id))} name={cur?.name} />
           </div>
           <div className="card rise" style={{ '--i': 2 }}><h3>Distribuzione dei voti</h3>
-            <Chart><BarChart data={dist} margin={{ left: -25, top: 8 }}><CartesianGrid stroke="#8b86a32e" vertical={false} /><XAxis dataKey="n" {...ax} /><YAxis allowDecimals={false} {...ax} /><Tooltip {...tip} formatter={(v) => [v, 'Voti']} labelFormatter={(l) => `Da ${l} a ${l},99`} /><Bar dataKey="c" fill={acc()} radius={[6, 6, 0, 0]} /></BarChart></Chart>
+            <Chart><BarChart data={dist} margin={{ left: -25, top: 8 }}><CartesianGrid stroke="#8b86a32e" vertical={false} /><XAxis dataKey="n" {...ax} /><YAxis allowDecimals={false} {...ax} /><Tooltip {...tip} formatter={(v) => [v, 'Voti']} labelFormatter={(l) => `Da ${l} a ${l},99`} /><Bar dataKey="c" radius={[8, 8, 0, 0]} animationDuration={1400} animationEasing="ease-out">{dist.map((d, i) => <Cell key={i} fill={i + 1 < 6 ? '#f87171' : i + 1 < 7 ? '#fbbf24' : '#34d399'} />)}</Bar></BarChart></Chart>
           </div>
           <div className="card rise" style={{ '--i': 3 }}><h3>Confronto tra le materie</h3>
-            <Chart><BarChart data={comp} margin={{ left: -25, top: 8 }}><CartesianGrid stroke="#8b86a32e" vertical={false} /><XAxis dataKey="n" {...ax} /><YAxis domain={[0, 10]} {...ax} /><Tooltip {...tip} formatter={(v) => [String(v).replace('.', ','), 'Media']} /><Bar dataKey="v" fill={acc2()} radius={[6, 6, 0, 0]} /></BarChart></Chart>
+            <Chart><BarChart data={comp} margin={{ left: -25, top: 8 }}><CartesianGrid stroke="#8b86a32e" vertical={false} /><XAxis dataKey="n" {...ax} /><YAxis domain={[0, 10]} {...ax} /><Tooltip {...tip} formatter={(v) => [String(v).replace('.', ','), 'Media']} /><Bar dataKey="v" radius={[8, 8, 0, 0]} animationDuration={1400} animationEasing="ease-out">{comp.map((d, i) => <Cell key={i} fill={d.v < 6 ? '#f87171' : d.v < 7 ? '#fbbf24' : '#34d399'} />)}</Bar></BarChart></Chart>
           </div>
         </div>
       )}
