@@ -6,6 +6,7 @@ import { avg, byDate } from '../utils';
 import { Chart, Trend, tip, gradeSeries } from '../charts.jsx';
 import { achievements } from '../achievements';
 import { PeriodBar } from '../ui.jsx';
+import { acc, acc2 } from '../theme';
 
 const ax = { stroke: '#8b86a3', fontSize: 12 };
 const AI = { Rocket, ListChecks, Trophy, Crown, Target, Flame, Zap, TrendingUp, Medal, ShieldCheck };
@@ -30,10 +31,10 @@ export default function Stats() {
             <Trend data={gradeSeries(grades.filter((g) => g.subjectId === cur?.id))} name={cur?.name} />
           </div>
           <div className="card rise" style={{ '--i': 2 }}><h3>Distribuzione dei voti</h3>
-            <Chart><BarChart data={dist} margin={{ left: -25, top: 8 }}><CartesianGrid stroke="#ffffff12" vertical={false} /><XAxis dataKey="n" {...ax} /><YAxis allowDecimals={false} {...ax} /><Tooltip {...tip} formatter={(v) => [v, 'Voti']} labelFormatter={(l) => `Da ${l} a ${l},99`} /><Bar dataKey="c" fill="#a855f7" radius={[6, 6, 0, 0]} /></BarChart></Chart>
+            <Chart><BarChart data={dist} margin={{ left: -25, top: 8 }}><CartesianGrid stroke="#8b86a32e" vertical={false} /><XAxis dataKey="n" {...ax} /><YAxis allowDecimals={false} {...ax} /><Tooltip {...tip} formatter={(v) => [v, 'Voti']} labelFormatter={(l) => `Da ${l} a ${l},99`} /><Bar dataKey="c" fill={acc()} radius={[6, 6, 0, 0]} /></BarChart></Chart>
           </div>
           <div className="card rise" style={{ '--i': 3 }}><h3>Confronto tra le materie</h3>
-            <Chart><BarChart data={comp} margin={{ left: -25, top: 8 }}><CartesianGrid stroke="#ffffff12" vertical={false} /><XAxis dataKey="n" {...ax} /><YAxis domain={[0, 10]} {...ax} /><Tooltip {...tip} formatter={(v) => [String(v).replace('.', ','), 'Media']} /><Bar dataKey="v" fill="#7c3aed" radius={[6, 6, 0, 0]} /></BarChart></Chart>
+            <Chart><BarChart data={comp} margin={{ left: -25, top: 8 }}><CartesianGrid stroke="#8b86a32e" vertical={false} /><XAxis dataKey="n" {...ax} /><YAxis domain={[0, 10]} {...ax} /><Tooltip {...tip} formatter={(v) => [String(v).replace('.', ','), 'Media']} /><Bar dataKey="v" fill={acc2()} radius={[6, 6, 0, 0]} /></BarChart></Chart>
           </div>
         </div>
       )}

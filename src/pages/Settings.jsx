@@ -5,12 +5,13 @@ import { SubjIcon, COLORS, ICONS } from '../icons.jsx';
 import { makePagella } from '../pdf';
 import { PERIODS } from '../utils';
 import PushCard from '../PushCard.jsx';
+import { ACCENTS, getPref, setPref } from '../theme';
 
 export default function Settings({ ask }) {
   const { subjects, allGrades, events, addSubject, updateSubject, deleteSubject, importData, session, signOut, mode, setMode } = useStore();
   const [name, setName] = useState(''); const [err, setErr] = useState('');
   const [edit, setEdit] = useState(null); const [ed, setEd] = useState({}); const [eerr, setEerr] = useState('');
-  const [msg, setMsg] = useState(''); const file = useRef();
+  const [, force] = useState(0); const [msg, setMsg] = useState(''); const file = useRef();
   const add = async (e) => { e.preventDefault(); const r = await addSubject(name); setErr(r || ''); if (!r) setName(''); };
   const save = async () => { const r = await updateSubject(edit, ed); setEerr(r || ''); if (!r) setEdit(null); };
   const del = (s) => { const n = allGrades.filter((g) => g.subjectId === s.id).length; ask({ title: 'Elimina materia', text: n ? `La materia "${s.name}" contiene ${n} ${n === 1 ? 'voto' : 'voti'}: eliminandola verranno eliminati anche i voti associati.` : `Eliminare la materia "${s.name}"?`, onOk: () => deleteSubject(s.id) }); };
@@ -35,6 +36,13 @@ export default function Settings({ ask }) {
         <div className="card"><h3>Account</h3>
           <p className="muted">Collegato come <b>{session?.user?.email}</b></p>
           <div className="row"><button className="btn ghost" onClick={signOut}>Esci</button></div>
+        </div>
+        <div className="card"><h3>Aspetto</h3>
+          <p className="muted">Tema</p>
+          <div className="seg three">{[['dark', 'Scuro'], ['light', 'Chiaro'], ['auto', 'Automatico']].map(([k, l]) => <button key={k} className={getPref('mv-theme', 'dark') === k ? 'on' : ''} onClick={() => { setPref('mv-theme', k); force((n) => n + 1); }}>{l}</button>)}</div>
+          <p className="muted">Colore principale: <b>{getPref('mv-accent', 'viola')}</b></p>
+          <div className="swatches big-sw">{Object.entries(ACCENTS).map(([k, [c]]) => <button key={k} className={`sw ${getPref('mv-accent', 'viola') === k ? 'on' : ''}`} style={{ background: c }} onClick={() => { setPref('mv-accent', k); force((n) => n + 1); }} aria-label={k} />)}</div>
+          <p className="muted small">Questa scelta vale solo per questo dispositivo.</p>
         </div>
         <div className="card"><h3>Periodo scolastico</h3>
           <p className="muted">Come divide l'anno la tua scuola?</p>
