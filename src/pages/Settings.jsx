@@ -4,6 +4,7 @@ import { useStore } from '../store.jsx';
 import { SubjIcon, COLORS, ICONS } from '../icons.jsx';
 import { makePagella } from '../pdf';
 import { PERIODS } from '../utils';
+import PushCard from '../PushCard.jsx';
 
 export default function Settings({ ask }) {
   const { subjects, allGrades, events, addSubject, updateSubject, deleteSubject, importData, session, signOut, mode, setMode } = useStore();
@@ -66,6 +67,7 @@ export default function Settings({ ask }) {
           </div>
           {eerr && <p className="err">{eerr}</p>}
         </div>
+        <PushCard />
         <div className="card"><h3>Pagella in PDF</h3>
           <p className="muted">Medie di ogni materia per {PERIODS[mode].full[0]}, {PERIODS[mode].full[1]} e totale.</p>
           <button className="btn" onClick={() => makePagella({ subjects, grades: allGrades, mode, email: session?.user?.email })}><FileText size={18} />Scarica pagella</button>

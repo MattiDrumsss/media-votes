@@ -7,3 +7,4 @@ const key = clean(env.SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY);
 try { url = new URL(url).origin; } catch { url = ''; }
 export const configured = Boolean(url && key);
 export const supabase = createClient(url || 'http://localhost', key || 'missing');
+export const supabaseUrl = url; export const supabaseKey = key;
