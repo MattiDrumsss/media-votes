@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { LayoutDashboard, BookOpen, BarChart3, Settings as Cog, Plus, CalendarDays } from 'lucide-react';
+import { LayoutDashboard, BookOpen, BarChart3, Settings as Cog, Plus, CalendarDays, LayoutGrid } from 'lucide-react';
 import Dashboard from './pages/Dashboard.jsx';
 import Subjects from './pages/Subjects.jsx';
 import SubjectDetail from './pages/SubjectDetail.jsx';
 import Calendar from './pages/Calendar.jsx';
+import Heatmap from './pages/Heatmap.jsx';
 import Stats from './pages/Stats.jsx';
 import Settings from './pages/Settings.jsx';
 import GradeForm from './GradeForm.jsx';
@@ -12,8 +13,8 @@ import { Confirm, Splash } from './ui.jsx';
 import { useStore } from './store.jsx';
 import { configured } from './supabase';
 
-const NAV = [['dashboard', 'Dashboard', LayoutDashboard, 'Home'], ['subjects', 'Materie', BookOpen, 'Materie'], ['calendar', 'Verifiche', CalendarDays, 'Verifiche'], ['stats', 'Statistiche', BarChart3, 'Stats'], ['settings', 'Impostazioni', Cog, 'Impost.']];
-const PAGES = { dashboard: Dashboard, subjects: Subjects, detail: SubjectDetail, calendar: Calendar, stats: Stats, settings: Settings };
+const NAV = [['dashboard', 'Dashboard', LayoutDashboard, 'Home'], ['subjects', 'Materie', BookOpen, 'Materie'], ['calendar', 'Verifiche', CalendarDays, 'Verifiche'], ['heatmap', 'Mappa dei voti', LayoutGrid, 'Mappa'], ['stats', 'Statistiche', BarChart3, 'Stats'], ['settings', 'Impostazioni', Cog, 'Impost.']];
+const PAGES = { dashboard: Dashboard, subjects: Subjects, detail: SubjectDetail, calendar: Calendar, heatmap: Heatmap, stats: Stats, settings: Settings };
 
 function Shell() {
   const { error, loading } = useStore();
@@ -36,7 +37,7 @@ function Shell() {
         {error && <div className="card err">{error}</div>}
         {loading ? <p className="muted">Caricamento…</p> : <div className="page" key={route.page + route.id}><Page {...ui} id={route.id} /></div>}
       </main>
-      <nav className="tabs" style={{ '--idx': idx }}>
+      <nav className="tabs" style={{ '--idx': idx, '--n': NAV.length }}>
         <span className="glass-ind" />
         {NAV.map(([k, l, I, s]) => <button key={k} className={active === k ? 'on' : ''} onClick={() => go(k)} aria-label={l}><I size={20} /><span>{s}</span></button>)}
       </nav>
