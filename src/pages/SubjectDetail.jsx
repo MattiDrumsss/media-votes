@@ -6,7 +6,7 @@ import { PeriodBar, TrendIcon, CountUp, Ring, Bar } from '../ui.jsx';
 import { SubjIcon } from '../icons.jsx';
 import { Trend, gradeSeries } from '../charts.jsx';
 
-export default function SubjectDetail({ id, go, openAdd, openEdit, ask }) {
+export default function SubjectDetail({ id, go, openQuick, openEdit, ask }) {
   const { subjects, grades, deleteGrade } = useStore();
   const [menu, setMenu] = useState(null);
   const s = subjects.find((x) => x.id === id);
@@ -24,7 +24,7 @@ export default function SubjectDetail({ id, go, openAdd, openEdit, ask }) {
         <div className="subhero-top">
           <SubjIcon s={s} size={26} />
           <div className="grow"><h1>{s.name}</h1><span className="pill">{toneLabel[t]}</span></div>
-          <button className="btn sm" onClick={() => openAdd(id)}><Plus size={16} />Voto</button>
+          <button className="btn sm" onClick={() => openQuick(id)}><Plus size={16} />Voto</button>
         </div>
         <div className="subhero-body">
           <Ring value={a} t={t} size={124} stroke={11}><span className="bigring"><CountUp value={a} /></span></Ring>

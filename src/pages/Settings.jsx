@@ -6,6 +6,7 @@ import { makePagella } from '../pdf';
 import { PERIODS } from '../utils';
 import PushCard from '../PushCard.jsx';
 import { ACCENTS, getPref, setPref } from '../theme';
+import { sfx } from '../feedback';
 
 export default function Settings({ ask }) {
   const { subjects, allGrades, events, addSubject, updateSubject, deleteSubject, importData, session, signOut, mode, setMode } = useStore();
@@ -42,7 +43,15 @@ export default function Settings({ ask }) {
           <div className="seg three">{[['dark', 'Scuro'], ['light', 'Chiaro'], ['auto', 'Automatico']].map(([k, l]) => <button key={k} className={getPref('mv-theme', 'dark') === k ? 'on' : ''} onClick={() => { setPref('mv-theme', k); force((n) => n + 1); }}>{l}</button>)}</div>
           <p className="muted">Colore principale: <b>{getPref('mv-accent', 'viola')}</b></p>
           <div className="swatches big-sw">{Object.entries(ACCENTS).map(([k, [c]]) => <button key={k} className={`sw ${getPref('mv-accent', 'viola') === k ? 'on' : ''}`} style={{ background: c }} onClick={() => { setPref('mv-accent', k); force((n) => n + 1); }} aria-label={k} />)}</div>
-          <p className="muted small">Questa scelta vale solo per questo dispositivo.</p>
+          <p className="muted">Tema stagionale</p>
+          <div className="chiprow">{[['auto', 'Automatico'], ['off', 'Spento'], ['autunno', 'Autunno'], ['inverno', 'Inverno'], ['primavera', 'Primavera'], ['estate', 'Estate'], ['natale', 'Natale']].map(([k, l]) => <button key={k} className={getPref('mv-season', 'auto') === k ? 'on' : ''} onClick={() => { setPref('mv-season', k); force((n) => n + 1); }}>{l}</button>)}</div>
+          <p className="muted">Suoni e vibrazione</p>
+          <div className="row wrap">
+            <label className="chk"><input type="checkbox" checked={getPref('mv-sound', 'on') === 'on'} onChange={(e) => { setPref('mv-sound', e.target.checked ? 'on' : 'off'); force((n) => n + 1); }} />Suoni</label>
+            <label className="chk"><input type="checkbox" checked={getPref('mv-vibe', 'on') === 'on'} onChange={(e) => { setPref('mv-vibe', e.target.checked ? 'on' : 'off'); force((n) => n + 1); }} />Vibrazione</label>
+            <button className="btn ghost sm" onClick={() => sfx('high')}>Prova</button>
+          </div>
+          <p className="muted small">La vibrazione funziona solo su Android: iPhone non la permette ai siti. Queste scelte valgono solo per questo dispositivo.</p>
         </div>
         <div className="card"><h3>Periodo scolastico</h3>
           <p className="muted">Come divide l'anno la tua scuola?</p>

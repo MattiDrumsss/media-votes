@@ -5,7 +5,7 @@ import { achievements } from '../achievements';
 import { Bar, SubjectGrid, PeriodBar, CountUp } from '../ui.jsx';
 import { EventRow } from './Calendar.jsx';
 
-export default function Dashboard({ go, openAdd }) {
+export default function Dashboard({ go, openQuick }) {
   const { subjects, grades, allGrades, events } = useStore();
   const gen = avg(grades); const { streak } = achievements(allGrades, subjects);
   const next = [...events].filter((e) => daysUntil(e.date) >= 0).sort(byDate).slice(0, 3);
@@ -17,7 +17,7 @@ export default function Dashboard({ go, openAdd }) {
         <div className="row">
           {streak > 0 && <span className="streak"><Flame size={16} />{streak}</span>}
           <button className="icon-btn" onClick={() => go('settings')} aria-label="Impostazioni"><Settings size={20} /></button>
-          <button className="btn" onClick={() => openAdd()}><Plus size={18} />AGGIUNGI VOTO</button>
+          <button className="btn" onClick={() => openQuick()}><Plus size={18} />AGGIUNGI VOTO</button>
         </div>
       </header>
       <PeriodBar />
