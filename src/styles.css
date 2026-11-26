@@ -338,3 +338,28 @@ body::after{width:520px;height:520px;bottom:-220px;left:-160px;background:radial
 .qk-check path{stroke-dasharray:50;stroke-dashoffset:50;animation:draw .4s .5s ease-out forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .qk-bigv{font-family:'Sora',sans-serif;font-size:3.8rem;font-weight:800;letter-spacing:-.04em;text-shadow:0 0 30px var(--c);animation:pop .5s .3s both}
+
+/* ===== voto rapido v3: passi ===== */
+.qk-steps{gap:0}
+.qk-st{display:flex;align-items:center;flex:0 0 auto}.qk-st:not(:first-child){flex:1}
+.qk-st b{flex:1;min-width:10px;height:2px;margin:0 8px;background:var(--line);border-radius:2px}
+button.qk-step{background:none;padding:0}button.qk-step:disabled{cursor:default}
+.qk-step .lbl{display:none}.qk-step.on .lbl{display:inline;animation:rise .3s both}
+.qk-slide{animation:slideIn .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideIn{from{opacity:0;transform:translateX(28px)}}
+.qk-n.on{outline:3px solid #fff;outline-offset:2px}
+.qk-tile.sel{border-color:var(--c);background:color-mix(in srgb,var(--c) 20%,transparent)}
+.qk-dates{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.qk-d{display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 6px 14px;border-radius:20px;border:1px solid var(--line);background:var(--card);font-weight:700;transition:.2s}
+.qk-d small{font-weight:500;color:var(--mu);font-size:.72rem;text-transform:capitalize}
+.qk-d:hover{transform:translateY(-3px)}.qk-d:active{transform:scale(.94)}
+.qk-d.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 22%,transparent);box-shadow:0 0 22px color-mix(in srgb,var(--c) 35%,transparent)}
+.qk-date{margin-top:14px}
+.qk-types{margin:0 0 14px}
+.qk textarea{display:block;width:100%;resize:none;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--tx);font:inherit;font-size:16px;outline:0}
+.qk textarea:focus{outline:2px solid var(--c)}
+[data-theme='light'] .qk textarea{background:rgba(30,20,80,.05)}
+.qk-sum{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.qk-sum span{padding:6px 12px;border-radius:99px;font-size:.82rem;font-weight:600;background:color-mix(in srgb,var(--c) 20%,transparent);text-transform:capitalize}
+.qk-sum span:nth-child(2){font-family:'Sora',sans-serif}
+.qk-foot{display:flex;gap:10px;margin-top:22px}.qk-foot .btn{flex:1}
