@@ -4,6 +4,7 @@ import { StoreProvider } from './store.jsx';
 import App from './App.jsx';
 import './styles.css';
 import { applyTheme } from './theme';
+import { sfx } from './feedback';
 applyTheme();
 matchMedia('(prefers-color-scheme: light)').addEventListener('change', applyTheme);
 createRoot(document.getElementById('root')).render(<StoreProvider><App /></StoreProvider>);
@@ -11,3 +12,4 @@ createRoot(document.getElementById('root')).render(<StoreProvider><App /></Store
 if ('serviceWorker' in navigator && import.meta.env.PROD) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 
 if (matchMedia('(hover: hover)').matches) document.addEventListener('pointermove', (e) => { const c = e.target.closest?.('.card'); if (c) { const r = c.getBoundingClientRect(); c.style.setProperty('--mx', `${e.clientX - r.left}px`); c.style.setProperty('--my', `${e.clientY - r.top}px`); } });
+document.addEventListener('click', (e) => { if (e.target.closest?.('button, a, select')) sfx('tap'); });

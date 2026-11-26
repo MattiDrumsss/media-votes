@@ -1,7 +1,7 @@
 export const ACCENTS = { viola: ['#a855f7', '#7c3aed'], blu: ['#3b82f6', '#1d4ed8'], verde: ['#10b981', '#047857'], rosa: ['#ec4899', '#be185d'], arancio: ['#f59e0b', '#d97706'] };
 const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(',');
 export const getPref = (k, d) => { try { return localStorage.getItem(k) || d; } catch { return d; } };
-export const setPref = (k, v) => { try { localStorage.setItem(k, v); } catch {} applyTheme(); };
+export const setPref = (k, v) => { try { localStorage.setItem(k, v); } catch {} applyTheme(); window.dispatchEvent(new Event('mv-pref')); };
 export function applyTheme() {
   const t = getPref('mv-theme', 'dark');
   const light = t === 'light' || (t === 'auto' && matchMedia('(prefers-color-scheme: light)').matches);
