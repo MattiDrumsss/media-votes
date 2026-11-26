@@ -11,6 +11,7 @@ import GradeForm from './GradeForm.jsx';
 import Auth from './Auth.jsx';
 import { Confirm, Splash, Confetti } from './ui.jsx';
 import QuickAdd from './QuickAdd.jsx';
+import QuickEvent from './QuickEvent.jsx';
 import Seasons from './Seasons.jsx';
 import { useStore } from './store.jsx';
 import { configured } from './supabase';
@@ -25,6 +26,7 @@ function Shell() {
   const [conf, setConf] = useState(null);
   const [burst, setBurst] = useState(0);
   const [quick, setQuick] = useState(null);
+  const [qev, setQev] = useState(false);
   const [toast, setToast] = useState('');
   const action = useRef(new URLSearchParams(location.search).get('action'));
   useEffect(() => {
@@ -35,7 +37,7 @@ function Shell() {
   }, []);
   useEffect(() => { const f = () => { setBurst(Date.now()); setTimeout(() => setBurst(0), 2400); }; window.addEventListener('mv-confetti', f); return () => window.removeEventListener('mv-confetti', f); }, []);
   const go = (page, id = null) => { setRoute({ page, id }); window.scrollTo(0, 0); };
-  const ui = { go, openAdd: (subjectId, eventId) => setForm({ subjectId, eventId }), openEdit: (grade) => setForm({ grade }), openQuick: (subjectId) => setQuick({ subjectId }), ask: setConf };
+  const ui = { go, openAdd: (subjectId, eventId) => setForm({ subjectId, eventId }), openEdit: (grade) => setForm({ grade }), openQuick: (subjectId) => setQuick({ subjectId }), openEvent: () => setQev(true), ask: setConf };
   const active = route.page === 'detail' ? 'subjects' : route.page;
   const idx = Math.max(0, NAV.findIndex((n) => n[0] === active));
   const Page = PAGES[route.page];
@@ -54,9 +56,10 @@ function Shell() {
         <span className="glass-ind" />
         {NAV.map(([k, l, I, s]) => <button key={k} className={active === k ? 'on' : ''} onClick={() => go(k)} aria-label={l}><I size={20} /><span>{s}</span></button>)}
       </nav>
-      <button className="fab" onClick={() => ui.openQuick()} aria-label="Aggiungi voto"><Plus size={26} /></button>
+      <button className="fab" onClick={() => (route.page === 'calendar' ? ui.openEvent() : ui.openQuick())} aria-label="Aggiungi"><Plus size={26} /></button>
       <Confetti burst={burst} />
       {toast && <div className="toast">{toast}</div>}
+      {qev && <QuickEvent onClose={() => setQev(false)} />}
       {quick && <QuickAdd subjectId={quick.subjectId} onClose={() => setQuick(null)} onFull={(p) => { setQuick(null); setForm(p); }} />}
       {form && <GradeForm {...form} onClose={() => setForm(null)} />}
       {conf && <Confirm c={conf} onClose={() => setConf(null)} />}

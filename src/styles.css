@@ -363,3 +363,8 @@ button.qk-step{background:none;padding:0}button.qk-step:disabled{cursor:default}
 .qk-sum span{padding:6px 12px;border-radius:99px;font-size:.82rem;font-weight:600;background:color-mix(in srgb,var(--c) 20%,transparent);text-transform:capitalize}
 .qk-sum span:nth-child(2){font-family:'Sora',sans-serif}
 .qk-foot{display:flex;gap:10px;margin-top:22px}.qk-foot .btn{flex:1}
+
+/* ===== verifiche: passi ===== */
+.cta{width:100%;padding:17px;font-size:1rem;margin:4px 0 6px}
+.qk-dates.two{grid-template-columns:repeat(2,1fr)}
+.qk-bigv.txt{font-size:2.3rem;text-align:center;line-height:1.1;padding:0 8px}
