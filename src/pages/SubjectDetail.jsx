@@ -5,15 +5,18 @@ import { avg, fmt, tone, toneLabel, fdate, byDate, trendOf } from '../utils';
 import { PeriodBar, TrendIcon, CountUp, Ring, Bar } from '../ui.jsx';
 import { SubjIcon } from '../icons.jsx';
 import { Trend, gradeSeries } from '../charts.jsx';
+import { useFilter, FilterBar } from '../Filters.jsx';
 
 export default function SubjectDetail({ id, go, openQuick, openEdit, ask }) {
   const { subjects, grades, deleteGrade } = useStore();
   const [menu, setMenu] = useState(null);
+  const f = useFilter();
   const s = subjects.find((x) => x.id === id);
   if (!s) return <div className="card empty">Materia non trovata. <button className="btn ghost" onClick={() => go('subjects')}>Torna alle materie</button></div>;
   const gs = grades.filter((g) => g.subjectId === id);
   const a = avg(gs); const t = tone(a); const vals = gs.map((g) => g.value);
-  const list = [...gs].sort(byDate).reverse();
+  const all = [...gs].sort(byDate).reverse();
+  const list = f.apply(all);
   const groups = [];
   list.forEach((g) => { const k = g.date.slice(0, 7); const last = groups[groups.length - 1]; if (last && last.k === k) last.items.push(g); else groups.push({ k, items: [g] }); });
   let n = 0;
@@ -40,7 +43,8 @@ export default function SubjectDetail({ id, go, openQuick, openEdit, ask }) {
       <h2>Andamento</h2>
       <div className="card rise" style={{ '--i': 1 }}><Trend data={gradeSeries(gs)} name={s.name} /></div>
       <h2>Tutti i voti</h2>
-      {!list.length ? <div className="card empty">Nessun voto in questa materia.</div> : groups.map((gr) => (
+      {gs.length > 2 && <FilterBar f={f} />}
+      {!list.length ? <div className="card empty">{all.length ? 'Nessun voto con questi filtri.' : 'Nessun voto in questa materia.'}</div> : groups.map((gr) => (
         <div key={gr.k}>
           <p className="mgroup">{new Date(gr.k + '-01T00:00').toLocaleDateString('it-IT', { month: 'long', year: 'numeric' })}</p>
           <div className="list">
