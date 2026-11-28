@@ -12,6 +12,7 @@ import Auth from './Auth.jsx';
 import { Confirm, Splash, Confetti } from './ui.jsx';
 import QuickAdd from './QuickAdd.jsx';
 import QuickEvent from './QuickEvent.jsx';
+import SearchModal from './SearchModal.jsx';
 import Seasons from './Seasons.jsx';
 import { useStore } from './store.jsx';
 import { configured } from './supabase';
@@ -27,6 +28,7 @@ function Shell() {
   const [burst, setBurst] = useState(0);
   const [quick, setQuick] = useState(null);
   const [qev, setQev] = useState(false);
+  const [search, setSearch] = useState(false);
   const [toast, setToast] = useState('');
   const action = useRef(new URLSearchParams(location.search).get('action'));
   useEffect(() => {
@@ -37,7 +39,7 @@ function Shell() {
   }, []);
   useEffect(() => { const f = () => { setBurst(Date.now()); setTimeout(() => setBurst(0), 2400); }; window.addEventListener('mv-confetti', f); return () => window.removeEventListener('mv-confetti', f); }, []);
   const go = (page, id = null) => { setRoute({ page, id }); window.scrollTo(0, 0); };
-  const ui = { go, openAdd: (subjectId, eventId) => setForm({ subjectId, eventId }), openEdit: (grade) => setForm({ grade }), openQuick: (subjectId) => setQuick({ subjectId }), openEvent: () => setQev(true), ask: setConf };
+  const ui = { go, openAdd: (subjectId, eventId) => setForm({ subjectId, eventId }), openEdit: (grade) => setForm({ grade }), openQuick: (subjectId) => setQuick({ subjectId }), openEvent: () => setQev(true), openSearch: () => setSearch(true), ask: setConf };
   const active = route.page === 'detail' ? 'subjects' : route.page;
   const idx = Math.max(0, NAV.findIndex((n) => n[0] === active));
   const Page = PAGES[route.page];
@@ -50,7 +52,7 @@ function Shell() {
       </aside>
       <main>
         {error && <div className="card err">{error}</div>}
-        {loading ? <p className="muted">Caricamento…</p> : <div className="page" key={route.page + route.id}><Page {...ui} id={route.id} /></div>}
+        {loading ? <div className="skels">{[0, 1, 2, 3].map((i) => <div key={i} className="skel card" style={{ '--i': i }} />)}</div> : <div className="page" key={route.page + route.id}><Page {...ui} id={route.id} /></div>}
       </main>
       <nav className="tabs" style={{ '--idx': idx, '--n': NAV.length }}>
         <span className="glass-ind" />
@@ -59,6 +61,7 @@ function Shell() {
       <button className="fab" onClick={() => (route.page === 'calendar' ? ui.openEvent() : ui.openQuick())} aria-label="Aggiungi"><Plus size={26} /></button>
       <Confetti burst={burst} />
       {toast && <div className="toast">{toast}</div>}
+      {search && <SearchModal onClose={() => setSearch(false)} onPick={(id) => { setSearch(false); go('detail', id); }} />}
       {qev && <QuickEvent onClose={() => setQev(false)} />}
       {quick && <QuickAdd subjectId={quick.subjectId} onClose={() => setQuick(null)} onFull={(p) => { setQuick(null); setForm(p); }} />}
       {form && <GradeForm {...form} onClose={() => setForm(null)} />}

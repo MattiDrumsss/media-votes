@@ -4,7 +4,7 @@ import { supabase } from './supabase';
 import { useStore } from './store.jsx';
 import { VAPID, pushSupported, getSub, enablePush, disablePush, sendTest } from './push';
 
-const DEF = { notify_before: true, notify_same: true, notify_time: '07:00' };
+const DEF = { notify_before: true, notify_same: true, notify_after: true, notify_time: '07:00' };
 
 export default function PushCard() {
   const { session } = useStore();
@@ -12,7 +12,7 @@ export default function PushCard() {
   const ok = pushSupported() && VAPID;
   const loadPrefs = async () => {
     const s = await getSub(); if (!s) return;
-    const { data } = await supabase.from('push_subs').select('notify_before,notify_same,notify_time').eq('endpoint', s.endpoint).maybeSingle();
+    const { data } = await supabase.from('push_subs').select('notify_before,notify_same,notify_after,notify_time').eq('endpoint', s.endpoint).maybeSingle();
     if (data) setP(data);
   };
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function PushCard() {
   const test = run(async () => setMsg(await sendTest(session.access_token)));
   const save = async (n) => {
     setP(n);
-    if (!n.notify_before && !n.notify_same) return setMsg('Scegli almeno un momento per la notifica.');
+    if (!n.notify_before && !n.notify_same && !n.notify_after) return setMsg('Scegli almeno un momento per la notifica.');
     if (!/^\d\d:\d\d$/.test(n.notify_time)) return;
     const s = await getSub();
     const { error } = await supabase.from('push_subs').update(n).eq('endpoint', s.endpoint);
@@ -45,6 +45,7 @@ export default function PushCard() {
               <span className="label">Quando avvisarmi</span>
               <label className="chk"><input type="checkbox" checked={p.notify_before} onChange={(e) => save({ ...p, notify_before: e.target.checked })} />Il giorno prima</label>
               <label className="chk"><input type="checkbox" checked={p.notify_same} onChange={(e) => save({ ...p, notify_same: e.target.checked })} />Il giorno stesso</label>
+              <label className="chk"><input type="checkbox" checked={p.notify_after} onChange={(e) => save({ ...p, notify_after: e.target.checked })} />Il giorno dopo, per registrare il voto</label>
               <label className="timef">A che ora<input type="time" value={p.notify_time} onChange={(e) => save({ ...p, notify_time: e.target.value })} /></label>
             </div>
           )}
